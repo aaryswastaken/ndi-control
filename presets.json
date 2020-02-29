@@ -1,0 +1,14 @@
+{
+  "Arene": {
+    "command": {
+      "host1": "Test Pattern"
+    },
+    "midi": 48
+  },
+  "Clear": {
+    "command": {
+      "host1": "clear"
+    },
+    "midi": 50
+  }
+}

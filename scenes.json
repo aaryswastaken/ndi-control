@@ -1,0 +1,10 @@
+{
+  "Test Pattern": {
+    "midi": 48,
+    "value": "LAPTOP-B27I44P4 (Test Pattern)"
+  },
+  "clear": {
+    "midi": 50,
+    "value": ""
+  }
+}
