@@ -1,7 +1,5 @@
 import json
-import mido
 import tkinter as tk
-from os import path
 import sys
 
 import api
@@ -119,7 +117,10 @@ def on_key_touch(message):
                     print("Sorry, there is no key defined with this one")
 
 
-midi = mido.open_input(callback=on_key_touch)
+if not "nomidi" in flags:
+    import mido
+
+    midi = mido.open_input(callback=on_key_touch)
 
 root = tk.Tk()
 
