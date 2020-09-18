@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/asyncio" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/chardet" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/concurrent" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/encodings" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/html" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/http" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/idna" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/importlib" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/json" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/lib2to3/pgen2" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/logging" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/mido" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/multiprocessing" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/requests" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/test/support" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/unittest" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/urllib" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/urllib3" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/xml" />
+      <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/xmlrpc" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
