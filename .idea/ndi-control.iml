@@ -25,7 +25,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/xml" />
       <excludeFolder url="file://$MODULE_DIR$/build/exe.win32-3.8/lib/xmlrpc" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.9" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
