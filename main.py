@@ -1,9 +1,9 @@
-import json
 import tkinter as tk
 import sys
 
 import api
 import config
+import midi
 
 flags = []
 
@@ -41,65 +41,13 @@ if "help" in flags:
 
 cfg = config.ConfigReader()
 hosts, scenes, presets = cfg.fetchClasses()
-hosts_midi, scenes_midi, presets_midi = cfg.fetchFromMidi()
 presets_names = cfg.fetchPresetsNames()
 
 sender = api.Sender(cfg)
 
-sustain = False
-isInProcess = False
-processHost = ""
-
-
-def on_key_touch(message):
-    global sustain, isInProcess, processHost
-    # print(message)
-    if message.type == "control_change" and message.control == 64:
-        sustain = message.value > 64
-    elif message.type == "note_on" and message.velocity != 0:
-        # print("As the key n {} is pressed, ".format(message.note))
-        if sustain:
-            if not isInProcess:
-                try:
-                    # processHost = midi_host_mapping[message.note]
-                    processHost = hosts_midi[message.note]
-                    print("And the sustain, the host {} will be affected by the following scene".format(processHost.name))
-                    isInProcess = True
-                except:
-                    print("Unknown host ... aborting")
-            else:
-                try:
-                    # scene = scene_midi[message.note]
-                    scene = scenes_midi[message.note]
-                    print("The scene {} will be applied".format(scene.name))
-                    sender.applySceneToHost(host=processHost, scene=scene)
-                    isInProcess = False
-                except:
-                    print("Unknown scene ... continuing")
-        else:
-            if isInProcess:
-                print("Aborted")
-                isInProcess = False
-            else:
-                try:
-                    # preset = midi_mapping[message.note]
-                    preset = presets_midi[message.note]
-                    print("The preset {} will be applied".format(preset.name))
-                    preset_selection.set(preset.name)
-                    sender.applyPreset(preset=preset)
-                except:
-                    print("Sorry, there is no key defined with this one")
-
-midi = None
-
-if "nomidi" not in flags:
-    try:
-        import mido
-        midi = mido.open_input(callback=on_key_touch)
-    except OSError or IOError:
-        print("[WARN] No midi device connected ! Use the argument --no-midi to disable this warning")
-        flags.append("nomidi")
-
+midi_inst = midi.MidiHandler(cfg, flags, sender)
+flags = midi_inst.register()
+print("Registered")
 
 root = tk.Tk()
 
