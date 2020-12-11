@@ -38,3 +38,8 @@ class GUI:
 
     def callback(self, *args):
         print("The selected item is {}".format(self.preset_selection.get()))
+
+
+class GUI_experimental:
+    def __init__(self, cfg, sender):
+        pass

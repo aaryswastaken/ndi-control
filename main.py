@@ -9,6 +9,8 @@ flags = []
 
 flags_definition = {
     "--no-midi": "nomidi",
+    "--experimental": "exp",
+    "-e": "exp",
     "-h": "help",
     "--help": "help"
 }
@@ -35,8 +37,9 @@ if len(sys.argv) > 1:
 if "help" in flags:
     print("Welcome to the NDI-Control help command")
     print()
-    print(" -h  --help     : Shows help")
-    print(" --no-midi      : Deactivate midi input")
+    print(" -h  --help          : Shows help")
+    print(" --no-midi           : Deactivate midi input")
+    print(" -e --experimental   : Force experimental features /!\\ DO NOT USE IT IN PRODUCTION")
     exit(0)
 
 # ---------- CONFIG READ ----------
@@ -51,4 +54,7 @@ flags = midi_inst.register()
 # print("Registered")
 
 # ---------- GUI ----------
-gui.GUI(cfg, sender)  # [WARN] This is a blocking function
+if "exp" in flags:
+    gui.GUI_experimental(cfg, sender)
+else:
+    gui.GUI(cfg, sender)  # [WARN] This is a blocking function
