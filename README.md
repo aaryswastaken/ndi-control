@@ -16,10 +16,11 @@ A python interface for ndi.tv tools "Studio Monitor" with gui and midi support
 5. Run ```python main.py```
 
 ## Settings
-Settings consists of three files :
-- ```hosts.json``` that contains all displays
-- ```presets.json``` contains every presets (ex : send scene A to every screens) and midi assignation
-- ```scenes.json``` defines all ndi channels 
+Settings consists of three parts :
+- ```hosts``` that contains all displays
+- ```presets``` contains every presets (ex : send scene A to every screens) and midi assignation
+- ```scenes``` defines all ndi channels 
+- ```general``` containing general purpose config  
 
 ### MIDI
 The midi control can do 2 things : 
@@ -42,6 +43,7 @@ Arguments are :
 
 - ```-h``` or ```--help``` for help
 - ```--no-midi``` to disable midi support
+- ```--experimental``` or ```-e``` to enable experimental features 
 
 ## Troubleshooting
 |Error Code | Error |
