@@ -35,7 +35,7 @@ class MidiHandler:
                         # processHost = midi_host_mapping[message.note]
                         processHost = self.hosts_midi[message.note]
                         print("And the sustain, the host {} will be affected by the following scene".format(processHost.name))
-                        isInProcess = True
+                        self.isInProcess = True
                     except:
                         print("Unknown host ... aborting")
                 else:
@@ -44,13 +44,13 @@ class MidiHandler:
                         scene = self.scenes_midi[message.note]
                         print("The scene {} will be applied".format(scene.name))
                         self.sender.applySceneToHost(host=self.processHost, scene=scene)
-                        isInProcess = False
+                        self.isInProcess = False
                     except:
                         print("Unknown scene ... continuing")
             else:
                 if self.isInProcess:
                     print("Aborted")
-                    isInProcess = False
+                    self.isInProcess = False
                 else:
                     try:
                         # preset = midi_mapping[message.note]
