@@ -1,0 +1,34 @@
+{
+  "hosts": {
+    "host1": {
+      "url": "192.168.1.45",
+      "user": "admin",
+      "pass": "admin",
+      "midi": 48
+    }
+  },
+  "presets": {
+    "Arene": {
+      "command": {
+        "host1": "Test Pattern"
+      },
+      "midi": 48
+    },
+    "Clear": {
+      "command": {
+        "host1": "clear"
+      },
+      "midi": 50
+    }
+  },
+  "scenes": {
+    "Test Pattern": {
+      "midi": 48,
+      "value": "TITANE (Test Pattern)"
+    },
+    "clear": {
+      "midi": 50,
+      "value": ""
+    }
+  }
+}

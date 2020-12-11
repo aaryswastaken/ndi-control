@@ -3,6 +3,7 @@ import tkinter as tk
 import sys
 
 import api
+import config
 
 flags = []
 
@@ -38,42 +39,12 @@ if "help" in flags:
     print(" --no-midi      : Deactivate midi input")
     exit(0)
 
-try:
-    with open("hosts.json") as host_file:
-        hosts = json.load(host_file)
+cfg = config.ConfigReader()
+hosts, scenes, presets = cfg.fetchClasses()
+hosts_midi, scenes_midi, presets_midi = cfg.fetchFromMidi()
+presets_names = cfg.fetchPresetsNames()
 
-    with open("presets.json") as presets_file:
-        presets = json.load(presets_file)
-
-    with open("scenes.json") as scene_file:
-        scenes = json.load(scene_file)
-except FileNotFoundError:
-    throw_error(
-        "An error occured when parsing differents config files, please check README to know how to troubleshoot")
-
-sender = api.Sender(hosts, presets, scenes)
-
-presets_name = []
-
-for preset in presets:
-    presets_name.append(preset)
-
-midi_mapping = {}
-
-for preset in presets:
-    midi_mapping[presets[preset]["midi"]] = preset
-
-hostnames = []
-midi_host_mapping = {}
-
-for host in hosts:
-    hostnames.append(host)
-    midi_host_mapping[hosts[host]["midi"]] = host
-
-scene_midi = {}
-
-for scene in scenes:
-    scene_midi[scenes[scene]["midi"]] = scene
+sender = api.Sender(cfg)
 
 sustain = False
 isInProcess = False
@@ -90,16 +61,18 @@ def on_key_touch(message):
         if sustain:
             if not isInProcess:
                 try:
-                    processHost = midi_host_mapping[message.note]
-                    print("And the sustain, the host {} will be affected by the following scene".format(processHost))
+                    # processHost = midi_host_mapping[message.note]
+                    processHost = hosts_midi[message.note]
+                    print("And the sustain, the host {} will be affected by the following scene".format(processHost.name))
                     isInProcess = True
                 except:
                     print("Unknown host ... aborting")
             else:
                 try:
-                    scene = scene_midi[message.note]
-                    print("The scene {} will be applied".format(scene))
-                    sender.send(processHost, scene)
+                    # scene = scene_midi[message.note]
+                    scene = scenes_midi[message.note]
+                    print("The scene {} will be applied".format(scene.name))
+                    sender.applySceneToHost(host=processHost, scene=scene)
                     isInProcess = False
                 except:
                     print("Unknown scene ... continuing")
@@ -109,18 +82,24 @@ def on_key_touch(message):
                 isInProcess = False
             else:
                 try:
-                    preset = midi_mapping[message.note]
-                    print("The preset {} will be applied".format(preset))
-                    preset_selection.set(preset)
-                    sender.sendPreset(preset)
+                    # preset = midi_mapping[message.note]
+                    preset = presets_midi[message.note]
+                    print("The preset {} will be applied".format(preset.name))
+                    preset_selection.set(preset.name)
+                    sender.applyPreset(preset=preset)
                 except:
                     print("Sorry, there is no key defined with this one")
 
+midi = None
 
-if not "nomidi" in flags:
-    import mido
+if "nomidi" not in flags:
+    try:
+        import mido
+        midi = mido.open_input(callback=on_key_touch)
+    except OSError or IOError:
+        print("[WARN] No midi device connected ! Use the argument --no-midi to disable this warning")
+        flags.append("nomidi")
 
-    midi = mido.open_input(callback=on_key_touch)
 
 root = tk.Tk()
 
@@ -131,9 +110,9 @@ l = tk.LabelFrame(root, text="Selection du preset", padx=20, pady=20)
 l.pack(fill="both", expand="yes")
 
 preset_selection = tk.StringVar(root)
-preset_selection.set(presets_name[0])
+preset_selection.set(presets_names[0])
 
-opt = tk.OptionMenu(l, preset_selection, *presets_name)
+opt = tk.OptionMenu(l, preset_selection, *presets_names)
 opt.config(width=90, font=('Helvetica', 12))
 opt.pack(side="top")
 
@@ -143,7 +122,7 @@ l2.pack(fill="both", expand="yes")
 
 def sendcallback():
     print("Sending commands")
-    sender.sendPreset(preset_selection.get())
+    sender.applyPresetFromName(preset_selection.get())
 
 
 button = tk.Button(l2, text="Envoyer", command=sendcallback)
