@@ -48,7 +48,7 @@ class Sender:
         self.queue = Queue()
 
     def refresh(self):
-        _, _, self.presets = self.conf.fetchClasses()
+        self.hosts, self.scenes, self.presets = self.conf.fetchClasses()
 
     def changeConf(self, conf):
         self.conf = conf
@@ -56,13 +56,19 @@ class Sender:
 
     def applySceneToHost(self, scene, host):
         print(f'Applying scene {scene.name} to host {host.name}')
-
-    def applyPresetFromName(self, name):
-        preset = self.presets[name]
-        print(f'Applying preset {preset.name}')
+        self.queue.send(host=f'{host.url}/v1/configuration',
+                   data=str('{"version": 1, "NDI_source":"'+scene.ndi+'"}'),
+                   auth=HTTPDigestAuth(host.user, host.pwd),
+                   method="post")
 
     def applyPreset(self, preset):
         print(f'Applying preset {preset.name}')
+        for host in preset.assignations:
+            self.applySceneToHost(host=host, scene=preset.assignations[host])
+
+    def applyPresetFromName(self, name):
+        preset = self.presets[name]
+        self.applyPreset(preset)
 
 
 # class Sender():

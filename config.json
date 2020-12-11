@@ -1,7 +1,7 @@
 {
   "hosts": {
     "host1": {
-      "url": "192.168.1.45",
+      "url": "http://192.168.1.11",
       "user": "admin",
       "pass": "admin",
       "midi": 48
