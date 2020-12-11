@@ -1,8 +1,0 @@
-{
-  "host1": {
-    "url": "192.168.1.45",
-    "user": "admin",
-    "pass": "admin",
-    "midi": 48
-  }
-}
