@@ -38,7 +38,7 @@ class _sender(threading.Thread):
 
                 return
 
-        print("An error occurred while trying to send "+str(self.req["host"]))
+        print("An error occurred while trying to send " + str(self.req["host"]))
 
 
 class Sender:
@@ -57,9 +57,9 @@ class Sender:
     def applySceneToHost(self, scene, host):
         print(f'Applying scene {scene.name} to host {host.name}')
         self.queue.send(host=f'{host.url}/v1/configuration',
-                   data=str('{"version": 1, "NDI_source":"'+scene.ndi+'"}'),
-                   auth=HTTPDigestAuth(host.user, host.pwd),
-                   method="post")
+                        data=str('{"version": 1, "NDI_source":"' + scene.ndi + '"}'),
+                        auth=HTTPDigestAuth(host.user, host.pwd),
+                        method="post")
 
     def applyPreset(self, preset):
         print(f'Applying preset {preset.name}')
@@ -70,30 +70,30 @@ class Sender:
         preset = self.presets[name]
         self.applyPreset(preset)
 
+    def setAsPIP(self, host, scene):
+        self.queue.send(host=f'{host.url}/v1/configuration',
+                        data=str('{"version": 1, "NDI_overlay":"' + scene.ndi + '"}'),
+                        auth=HTTPDigestAuth(host.user, host.pwd),
+                        method="post")
 
-# class Sender():
-#     def __init__(self, hosts, presets, scenes):
-#         self.hosts = hosts
-#         self.presets = presets
-#         self.scenes = scenes
-#         self.queue = Queue()
-#         self.queue.start()
-#
-#     def raw_send(self, host, scene, user="admin", pwd="admin"):
-#         data = '{"version": 1, "NDI_source":"' + scene + '"}'
-#         self.queue.send("http://" + host + "/v1/configuration", data=str(data), auth=HTTPDigestAuth(user, pwd))
-#
-#     def send(self, hostname, scene_name):
-#         self.raw_send(self.hosts[hostname]["url"], self.scenes[scene_name]["value"])
-#
-#     def sendPreset(self, preset_name):
-#         for host in self.presets[preset_name]["command"]:
-#             command = self.presets[preset_name]["command"][host]
-#             self.send(host, command)
+    def setPIP(self, host, state):
+        self.queue.send(host=f'{host.url}/v1/configuration',
+                        data=str('{"version": 1, "decorations":{"picture_in_picture": ' + str(state).lower() + '}}'),
+                        auth=HTTPDigestAuth(host.user, host.pwd),
+                        method="post")
+
+    def showPIP(self, host):
+        self.setPIP(host, True)
+
+    def hidePIP(self, host):
+        self.setPIP(host, False)
 
 
 if __name__ == "__main__":
-    queue = Queue()
-    queue.send(host="https://127.0.0.1", method="get")
-    time.sleep(1)
-    queue.send(host="https://www.google.com", method="get")
+    import config
+
+    cfg = config.ConfigReader()
+    sender = Sender(cfg)
+    time.sleep(5)
+    hosts, _, _ = cfg.fetchClasses()
+    sender.showPIP(hosts["host1"])
