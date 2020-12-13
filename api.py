@@ -55,11 +55,14 @@ class Sender:
         self.refresh()
 
     def applySceneToHost(self, scene, host):
-        print(f'Applying scene {scene.name} to host {host.name}')
-        self.queue.send(host=f'{host.url}/v1/configuration',
-                        data=str('{"version": 1, "NDI_source":"' + scene.ndi + '"}'),
-                        auth=HTTPDigestAuth(host.user, host.pwd),
-                        method="post")
+        if (not scene.dummy) and (not host.dummy):
+            print(f'Applying scene {scene.name} to host {host.name}')
+            self.queue.send(host=f'{host.url}/v1/configuration',
+                            data=str('{"version": 1, "NDI_source":"' + scene.ndi + '"}'),
+                            auth=HTTPDigestAuth(host.user, host.pwd),
+                            method="post")
+        else:
+            print(f'Not applying {scene.name} to {host.name} because of one of them being dummy')
 
     def applyPreset(self, preset):
         print(f'Applying preset {preset.name}')

@@ -1,9 +1,19 @@
 import sys
+import tkinter as tk
 
 import api
 import config
 import midi
 import gui
+
+# ACTUAL EXPERIMENTAL STATE :
+# Beggining of the implementation of the settings page at the beginning
+# -> Not loading actual parameters
+# -> Has no effect on then (no saving)
+# But global mechanic of gui switching is done
+
+# TODO : Implement the "Before" Button
+# For other TODOs, check in the files
 
 flags = []
 
@@ -48,13 +58,33 @@ cfg = config.ConfigReader()
 # ---------- SENDER ----------
 sender = api.Sender(cfg)
 
+# ---------- GUI ----------
+dispController = gui.DispositionControl(cfg=cfg)
+mainGUI = gui.GUI(cfg=cfg, control=dispController, sender=sender)  # [WARN] This is a blocking function
+if "exp" in flags:
+    settingsGUI = gui.SettingsGUI(cfg=cfg)
+
 # ---------- MIDI ----------
-midi_inst = midi.MidiHandler(cfg, flags, sender)
-flags = midi_inst.register()
+if "nomidi" not in flags:
+    midi_inst = midi.MidiHandler(cfg, flags, sender, gui=mainGUI)
+    flags = midi_inst.register()
+
+
 # print("Registered")
 
-# ---------- GUI ----------
+
+# START
+def onSettingsFinished():
+    mainGUI.presets()
+    mainGUI.controls()
+    mainGUI.matrix()
+    mainGUI.main_loop()
+
+
 if "exp" in flags:
-    gui.GUI_experimental(cfg, sender)
+    settings = cfg.fetchSettings()
+    if cfg.settingExists("settings.showOnStartup", _settings=settings):
+        if settings.settings.showOnStartup:
+            settingsGUI.show(callback=onSettingsFinished)
 else:
-    gui.GUI(cfg, sender)  # [WARN] This is a blocking function
+    onSettingsFinished()
